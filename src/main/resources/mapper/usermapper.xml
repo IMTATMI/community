@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 路径 指向dao层接口-->
+<mapper namespace="tusdigital.community.community.dao.UserDao" >
+    <sql id="Base_Column_List" >
+  id,name,password,email,logintype,usertype,credit
+  </sql>
+
+    <!--resultType 指向entity中对应的实体-->
+    <select id="findAllUser" parameterType="map" resultType="tusdigital.community.community.domain.User">
+        select  <include refid="Base_Column_List"></include>
+        from user
+    </select>
+
+    <select id="login" resultType="tusdigital.community.community.domain.User">
+        select * from user where name = #{loginName} and password = #{password}
+  </select>
+
+
+    <insert id="addUser" parameterType="tusdigital.community.community.domain.User">
+        insert into user (name,password,email,logintype,usertype,credit)VALUES(#{name},#{password,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{logintype},#{usertype},#{credit})
+    </insert>
+
+    <select id="findByName" resultType="tusdigital.community.community.domain.User" parameterType="String">
+        select * from user where name = #{name}
+  </select>
+
+
+
+
+</mapper>
