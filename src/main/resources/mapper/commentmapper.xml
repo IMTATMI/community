@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 路径 指向dao层接口-->
+<mapper namespace="tusdigital.community.community.dao.CommentDao" >
+
+    <sql id="Base_Column_List" >
+      id,parentid,type,commentator,createtime,modifiedtime,likecount,status,content,commentcount
+   </sql>
+
+    <select id="findByCount" resultType="Integer">
+        SELECT COUNT(1) FROM comment
+    </select>
+
+    <select id="findById" resultType="tusdigital.community.community.domain.Comment" parameterType="Integer">
+        select
+        <include refid="Base_Column_List"></include>
+        from comment where id = #{id}
+    </select>
+
+    <insert id="addComment" parameterType="tusdigital.community.community.domain.Comment">
+        insert into comment (parentid,type,commentator,createtime,modifiedtime,likecount,status,content,commentcount)
+        VALUES(#{parentid},#{type},#{commentator},#{createtime},#{modifiedtime},#{likecount},#{status},#{content},#{commentcount})
+    </insert>
+
+
+    <insert id="insertComment" parameterType="tusdigital.community.community.domain.Comment">
+
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="parentId != null">
+                parentid,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="commentator != null">
+                commentator,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="modifiedtime != null">
+                modifiedtime,
+            </if>
+            <if test="likecount != null">
+                likecount,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="commentcount != null">
+                commentcount,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                #{parentid,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="commentator != null">
+                #{commentator,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=BIGINT},
+            </if>
+            <if test="modifiedtime != null">
+                #{modifiedtime,jdbcType=BIGINT},
+            </if>
+            <if test="likecount != null">
+                #{likecount,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="commentcount != null">
+                #{commentcount,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="findByOneQuestion" resultType="tusdigital.community.community.domain.Comment" parameterType="Integer">
+        select
+        <include refid="Base_Column_List"></include>
+        from comment
+        where parentid = #{parentid}
+        and type =#{type}
+        order by createtime desc
+    </select>
+
+</mapper>

@@ -35,4 +35,21 @@ public class UserServiceImpl implements UserService {
         return userDao.findByName(name);
     }
 
+    @Override
+    public User findByToken(String token) {
+        return userDao.findByToken(token);
+    }
+
+    @Override
+    public User findById(int id) {
+        return userDao.findById(id);
+    }
+
+    @Override
+    public int updateUser(User user) {
+        return userDao.updateUser(user);
+    }
+
+
+
 }

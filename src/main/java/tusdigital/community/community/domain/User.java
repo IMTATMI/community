@@ -10,9 +10,44 @@ public class User {
   private int logintype;
   private int usertype;
   private int credit;
+  private String token;
+  private long createtime;
+  private long modifidetime;
+  private String avatarUrl;
 
+    public String getAvatar_url() {
+        return avatarUrl;
+    }
 
-  public long getId() {
+    public void setAvatar_url(String avatar_url) {
+        this.avatarUrl = avatar_url;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public long getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(long createtime) {
+        this.createtime = createtime;
+    }
+
+    public long getModifidetime() {
+        return modifidetime;
+    }
+
+    public void setModifidetime(long modifidetime) {
+        this.modifidetime = modifidetime;
+    }
+
+    public int getId() {
     return id;
   }
 
@@ -83,7 +118,11 @@ public class User {
                 ", email='" + email + '\'' +
                 ", logintype=" + logintype +
                 ", usertype=" + usertype +
-                ", credit='" + credit + '\'' +
+                ", credit=" + credit +
+                ", token='" + token + '\'' +
+                ", createtime=" + createtime +
+                ", modifidetime=" + modifidetime +
+                ", avatar_url='" + avatarUrl + '\'' +
                 '}';
     }
 }

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 路径 指向dao层接口-->
+<mapper namespace="tusdigital.community.community.dao.QuestionDao" >
+
+    <sql id="Base_Column_List" >
+      id,title,descrpition,creat_time,modified_time,creator,comment_count,view_count,like_count,tag,status
+    </sql>
+
+
+    <select id="findAllQuestion" parameterType="map" resultType="tusdigital.community.community.domain.Question">
+        select  <include refid="Base_Column_List"></include>
+        from question
+    </select>
+
+    <select id="findAllPassQuestion" parameterType="map" resultType="tusdigital.community.community.domain.Question">
+        select  <include refid="Base_Column_List"></include>
+        from question
+        where status = 1
+        limit #{offset},#{size}
+    </select>
+
+    <select id="findAll"  resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question
+    </select>
+
+    <select id="findAllById"  resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM question where creator = #{id}
+    </select>
+
+
+
+    <insert id="addQuestion" parameterType="tusdigital.community.community.domain.Question">
+        insert into question (title,descrpition,creat_time,modified_time,creator,comment_count,view_count,like_count,tag,status)
+        VALUES(#{title},#{descrpition,jdbcType=VARCHAR},#{creat_time},#{modified_time},#{creator},#{comment_count},#{view_count},#{like_count},#{tag},#{status})
+    </insert>
+
+
+    <select id="findAllPassQuestionByPerson" parameterType="map" resultType="tusdigital.community.community.domain.Question">
+        select  <include refid="Base_Column_List"></include>
+        from question
+        where creator = #{id}
+        limit #{offset},#{size}
+    </select>
+
+
+    <select id="findOneById"  resultType="tusdigital.community.community.domain.Question">
+        select  <include refid="Base_Column_List"></include>
+        FROM question
+        where id = #{id}
+    </select>
+
+
+    <update id="updataQuestion" parameterType="tusdigital.community.community.domain.Question">
+        <if test="id!=null">
+            update
+            question
+            <set>
+                <if test="title!=null and title!=''">
+                    title = #{title},
+                </if>
+                <if test="descrpition!=null and descrpition!=''">
+                    descrpition = #{descrpition},
+                </if>
+                <if test="modified_time!=null and modified_time!=''">
+                    modified_time = #{modified_time},
+                </if>
+                <if test="comment_count!=null and comment_count!=''">
+                    comment_count = #{comment_count},
+                </if>
+                <if test="view_count!=null and view_count!=''">
+                    view_count = #{view_count},
+                </if>
+                <if test="like_count!=null and like_count!=''">
+                    like_count = #{like_count},
+                </if>
+                <if test="tag!=null and tag!=''">
+                    tag = #{tag},
+                </if>
+                <if test="status!=null and status!=''">
+                    status = #{status},
+                </if>
+            </set>
+            where id = #{id}
+        </if>
+    </update>
+
+    <update id="incView" parameterType="tusdigital.community.community.domain.Question">
+        update question
+        set
+        view_count = view_count + #{view_count,jdbcType=INTEGER}
+        where id = #{id}
+    </update>
+
+    <update id="incCommentCount" parameterType="tusdigital.community.community.domain.Question">
+        update question
+        set
+        comment_count = comment_count + #{comment_count,jdbcType=INTEGER}
+        where id = #{id}
+    </update>
+
+
+
+</mapper>

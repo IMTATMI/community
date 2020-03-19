@@ -50,8 +50,6 @@ public class GithubProvider {
            Response response = client.newCall(request).execute();
            String string =  response.body().string();
            User user =JSON.parseObject(string,User.class);
-           user.setLogintype(2);
-           user.setUsertype(1);
            return user;
        } catch (IOException e) {
            e.printStackTrace();

@@ -9,4 +9,8 @@ public interface UserService {
     User findLogin(String username, String password);
     int addUser(User user);
     List<User> findByName(String name);
+    User findByToken(String token);
+    User findById(int id);
+    int updateUser(User user);
+
 }

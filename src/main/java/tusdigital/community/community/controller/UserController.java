@@ -9,8 +9,12 @@ import tusdigital.community.community.service.UserService;
 import tusdigital.community.community.utils.MD5Util;
 import tusdigital.community.community.utils.StringUtil;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("user")
@@ -28,16 +32,28 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
+                        HttpServletResponse response,
                         Map<String,Object> map){
+
+        //登录 判断账号密码状态
         if(StringUtil.isEmpty(username) || StringUtil.isEmpty(password)){
             map.put("msg","账号密码不能为空");
             return "user/login";
         }else{
+            //非空 找是否有该用户 且 密码对不对
             User user = userService.findLogin(username,password);
             if (user == null){
                 map.put("msg","用户名密码错误");
                 return "user/login";
             }else {
+                //有这个用户  获取该用户token 放入cookie 实现长期登录
+                String token = user.getToken();
+                user.setModifidetime(System.currentTimeMillis());
+                userService.updateUser(user);
+                Cookie cookie =new Cookie("token",token);
+                //如果不setpath 这个cookie 的权限只有在 /user/xxxxx 下才有用   index会无法拿到
+                cookie.setPath("/");
+                response.addCookie(cookie);
                 return "redirect:/";
             }
         }
@@ -64,7 +80,8 @@ public class UserController {
 
 
         List<User> users = userService.findByName(ruser.getName());
-        if (users != null){
+        //list需要 isEmpty()
+        if (!users.isEmpty()){
             err.put("err","该账号已注册请重新输入");
             return "user/register";
         }else {
@@ -75,6 +92,10 @@ public class UserController {
             user.setLogintype(1);
             user.setUsertype(1);
             user.setCredit(0);
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            user.setCreatetime(System.currentTimeMillis());
+            user.setModifidetime(System.currentTimeMillis());
             userService.addUser(user);
             return "redirect:/user/login";
         }

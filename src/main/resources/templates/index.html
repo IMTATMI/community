@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Title</title>
+
 
 
     <!--springboot默认路径是这样，但是静态页面访问路径不是这样-->
@@ -11,12 +11,119 @@
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
 
+    <style>
+        body{
+            background-color: #efefef;
+        }
+        .media>.media-left>a>img{
+            width:45px ;
+            height: 45px;
+        }
+        .topic{
+            margin: 5px 0;
+            padding-bottom: 3px;
+            border-bottom: 1px #474d5b dotted;
+        }
+        .text-desc{
+            font-size: 12px;
+            font-weight: normal;
+            color: #999;
+        }
 
+    </style>
 
 </head>
 <body>
 
     <div th:replace="commoms/topbar :: topbar"></div>
+
+
+    <div class="container-fluid" style="margin: 30px;background-color: white">
+        <div class="row">
+
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+
+                <h2><span class="glyphicon glyphicon-list" style="margin-right: 10px"></span> 发 现 </h2>
+                <hr/>
+
+
+                <!--话题-->
+                <div class="media topic" th:each="question : ${pagination.data}">
+                    <div class="media-left media-middle">
+                        <a href="#">
+                            <img class="media-object img-rounded" th:src="${question.user.avatar_url}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a th:href="@{'/question/'+ ${question.id}}" th:text="${question.title}"></a>
+                        </h4>
+                        <span class="text-desc">发布人:</span>
+                        <span class="text-desc" th:text="${question.user.name}"></span>
+                        <br>
+                        <span th:text="${question.descrpition}"></span>
+                        <br>
+                        <span class="text-desc">
+                            <span th:text="${question.comment_count}"></span> 个回复 ·
+                            <span th:text="${question.view_count}"></span> 次浏览 ·
+                            <span th:text="${question.like_count}"></span> 个喜欢 ·
+                           <span th:text="${#dates.format(question.creat_time,'yyyy MM dd')}"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+
+                        <li th:if="${pagination.showFirstPage}">
+                            <a th:href="@{/(page=1)}" aria-label="Previous">
+                                <span aria-hidden="true">&lt;&lt;</span>
+                            </a>
+                        </li>
+
+                        <li th:if="${pagination.showPrevious}">
+                            <a th:href="@{/(page=${pagination.page - 1})}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&lt;</span>
+                            </a>
+                        </li>
+
+                            <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}? 'active' : ''">
+                                <a th:href="@{/(page=${page})}" th:text="${page}"></a>
+                            </li>
+
+
+                        <li th:if="${pagination.showNext}">
+                            <a th:href="@{/(page=${pagination.page +1 })}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&gt;</span>
+                            </a>
+                        </li>
+
+                        <li th:if="${pagination.showEndPage}">
+                            <a th:href="@{/(page=${pagination.totalPage})}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                            </a>
+                        </li>
+
+
+
+                    </ul>
+                </nav>
+
+
+            </div>
+
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                <h3>热门话题</h3>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div th:replace="commoms/footer :: foot"></div>
 
 
 </body>

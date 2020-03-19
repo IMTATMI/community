@@ -1,0 +1,33 @@
+package tusdigital.community.community.dao;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import tusdigital.community.community.domain.Question;
+
+import java.util.List;
+
+@Mapper
+public interface QuestionDao {
+
+    List<Question> findAllQuestion();
+
+    int addQuestion(Question question);
+
+    public int findAll();
+
+    // 从第几开始 每页多少
+    List<Question> findAllPassQuestion(@Param("offset")int offset,@Param("size") int size);
+
+
+    List<Question> findAllPassQuestionByPerson(@Param("id")int id,@Param("offset") int offset,@Param("size") int size);
+
+
+    Integer findAllById(int id);
+    Question findOneById(int id);
+
+    int updataQuestion(Question question);
+
+    int incView(Question question);
+
+    int incCommentCount(Question question);
+}

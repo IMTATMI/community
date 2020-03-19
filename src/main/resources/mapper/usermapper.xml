@@ -3,7 +3,7 @@
 <!--namespace 路径 指向dao层接口-->
 <mapper namespace="tusdigital.community.community.dao.UserDao" >
     <sql id="Base_Column_List" >
-  id,name,password,email,logintype,usertype,credit
+  id,name,password,email,logintype,usertype,credit,token,createtime,modifidetime,avatar_url
   </sql>
 
     <!--resultType 指向entity中对应的实体-->
@@ -18,12 +18,57 @@
 
 
     <insert id="addUser" parameterType="tusdigital.community.community.domain.User">
-        insert into user (name,password,email,logintype,usertype,credit)VALUES(#{name},#{password,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{logintype},#{usertype},#{credit})
+        insert into user (name,password,email,logintype,usertype,credit,token,createtime,modifidetime,avatar_url)
+        VALUES(#{name},#{password,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{logintype},#{usertype},#{credit},#{token},#{createtime},#{modifidetime},#{avatar_url,jdbcType=VARCHAR})
     </insert>
 
     <select id="findByName" resultType="tusdigital.community.community.domain.User" parameterType="String">
         select * from user where name = #{name}
   </select>
+
+    <select id="findByToken" resultType="tusdigital.community.community.domain.User" parameterType="String">
+        select * from user where token = #{token}
+  </select>
+
+    <select id="findById" resultType="tusdigital.community.community.domain.User" parameterType="Integer">
+        select * from user where id = #{id}
+  </select>
+
+
+    <update id="updateUser" parameterType="tusdigital.community.community.domain.User">
+        <if test="id!=null">
+            update
+            user
+            <set>
+                <if test="password!=null and password!=''">
+                    password = #{password},
+                </if>
+                <if test="email!=null and email!=''">
+                    email = #{email},
+                </if>
+                <if test="logintype!=null and logintype!=''">
+                    logintype = #{logintype},
+                </if>
+                <if test="usertype!=null and usertype!=''">
+                    usertype = #{usertype},
+                </if>
+                <if test="credit!=null and credit!=''">
+                    credit = #{credit},
+                </if>
+                <if test="token!=null and token!=''">
+                    token = #{token},
+                </if>
+                <if test="modifidetime!=null and modifidetime!=''">
+                    modifidetime = #{modifidetime},
+                </if>
+                <if test="avatar_url!=null and avatar_url!=''">
+                    avatar_url = #{avatar_url},
+                </if>
+            </set>
+            where id = #{id}
+        </if>
+    </update>
+
 
 
 
