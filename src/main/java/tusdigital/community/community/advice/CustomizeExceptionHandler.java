@@ -28,11 +28,11 @@ public class CustomizeExceptionHandler {
     Object handle(Throwable e, Model model, HttpServletRequest request, HttpServletResponse response) {
 
         String contentType = request.getContentType();
-        //json 和网页请求的contentType不同 由此来区分
+        //json 和网页请求的contentType不同 由此来区分 区分的原因在于json作用并不是报错，而是用户做了不规范操作，这时候不应做跳转操作
         //区分 是json 且是自定义异常/不是自定义异常
         //     不是json 且是自定义异常/不是自定义异常
         if ("application/json".equals(contentType)) {
-            System.out.println("是json");
+//            System.out.println("是json");
             ResultVo resultVo;
             if(e instanceof CustomizeException){
                 resultVo = ResultVo.errorOf((CustomizeException)e);
@@ -57,6 +57,7 @@ public class CustomizeExceptionHandler {
             if(e instanceof CustomizeException){
                 model.addAttribute("message", e.getMessage());
             }else {
+                System.out.println("执行到了非json的错误异常");
                 model.addAttribute("message",CustomizeErrorCode.SYS_ERROR.getMessage());
             }
             return new ModelAndView("error");

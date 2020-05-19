@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import tusdigital.community.community.domain.User;
+import tusdigital.community.community.service.NotificationService;
 import tusdigital.community.community.service.QuestionService;
 import tusdigital.community.community.service.UserService;
 import tusdigital.community.community.vo.PaginationVo;
@@ -24,6 +25,9 @@ public class ProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private NotificationService notificationService;
 
 
     @GetMapping("/profile/{action}")
@@ -65,8 +69,14 @@ public class ProfileController {
             model.addAttribute("pagination", paginationvo);
        }
        else if ("replies".equals(action)) {
+
+            PaginationVo paginationVo = notificationService.list(user.getId(), page, size);
+            model.addAttribute("pagination", paginationVo);
+
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
+
+
         }
 
         return "community/profile";

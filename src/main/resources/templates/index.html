@@ -32,6 +32,7 @@
 
     </style>
 
+
 </head>
 <body>
 
@@ -61,7 +62,7 @@
                         <span class="text-desc">发布人:</span>
                         <span class="text-desc" th:text="${question.user.name}"></span>
                         <br>
-                        <span th:text="${question.descrpition}"></span>
+                        <span th:text="${#strings.abbreviate(question.descrpition,100)}" ></span>
                         <br>
                         <span class="text-desc">
                             <span th:text="${question.comment_count}"></span> 个回复 ·
@@ -76,32 +77,32 @@
                     <ul class="pagination">
 
                         <li th:if="${pagination.showFirstPage}">
-                            <a th:href="@{/(page=1)}" aria-label="Previous">
+                            <a th:href="@{/(page=1,search=${search})}" aria-label="Previous">
                                 <span aria-hidden="true">&lt;&lt;</span>
                             </a>
                         </li>
 
                         <li th:if="${pagination.showPrevious}">
-                            <a th:href="@{/(page=${pagination.page - 1})}"
+                            <a th:href="@{/(page=${pagination.page - 1},search=${search})}"
                                aria-label="Previous">
                                 <span aria-hidden="true">&lt;</span>
                             </a>
                         </li>
 
                             <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}? 'active' : ''">
-                                <a th:href="@{/(page=${page})}" th:text="${page}"></a>
+                                <a th:href="@{/(page=${page},search=${search})}" th:text="${page}"></a>
                             </li>
 
 
                         <li th:if="${pagination.showNext}">
-                            <a th:href="@{/(page=${pagination.page +1 })}"
+                            <a th:href="@{/(page=${pagination.page +1 },search=${search})}"
                                aria-label="Previous">
                                 <span aria-hidden="true">&gt;</span>
                             </a>
                         </li>
 
                         <li th:if="${pagination.showEndPage}">
-                            <a th:href="@{/(page=${pagination.totalPage})}"
+                            <a th:href="@{/(page=${pagination.totalPage},search=${search})}"
                                aria-label="Previous">
                                 <span aria-hidden="true">&gt;&gt;</span>
                             </a>

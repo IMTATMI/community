@@ -101,4 +101,11 @@
         order by createtime desc
     </select>
 
+    <update id="incCommentCount" parameterType="Integer">
+      update comment
+      set
+      commentcount = commentcount+ #{commentCount,jdbcType=INTEGER}
+      where id = #{id}
+    </update>
+
 </mapper>

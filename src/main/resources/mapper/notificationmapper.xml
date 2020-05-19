@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--namespace 路径 指向dao层接口-->
+<mapper namespace="tusdigital.community.community.dao.NotificationDao" >
+
+    <sql id="Base_Column_List" >
+      id,notifier,receiver,outerid,type,create_time,status,notifier_name,outer_title
+   </sql>
+
+    <insert id="insert" parameterType="tusdigital.community.community.domain.Notification">
+        insert into notification (notifier,receiver,outerid,type,create_time,status,notifier_name,outer_title)
+        VALUES(#{notifier},#{receiver},#{outerid},#{type},#{createTime},#{status},#{notifierName},#{outerTitle})
+    </insert>
+
+
+    <select id="findAll" resultType="Integer">
+        SELECT COUNT(1) FROM notification where receiver = #{receiver}
+    </select>
+
+    <select id="findResCount" resultType="Integer">
+        SELECT COUNT(1) FROM notification where receiver = #{receiver} and status = 0
+    </select>
+
+    <select id="findAllNotificationByPerson" parameterType="map" resultType="tusdigital.community.community.domain.Notification">
+        select  <include refid="Base_Column_List"></include>
+        from notification
+        where receiver = #{receiver}
+        order by create_time desc
+        limit #{offset},#{size}
+    </select>
+
+
+    <select id="selectById" parameterType="Integer" resultType="tusdigital.community.community.domain.Notification">
+        select  <include refid="Base_Column_List"></include>
+        from notification
+        where id = #{id}
+    </select>
+
+    <update id="updateRead">
+        update notification
+        set status = 1
+        where id = #{id}
+    </update>
+
+
+</mapper>

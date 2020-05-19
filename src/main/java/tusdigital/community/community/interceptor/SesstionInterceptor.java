@@ -5,17 +5,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import tusdigital.community.community.domain.User;
+import tusdigital.community.community.service.NotificationService;
 import tusdigital.community.community.service.UserService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Service
 public class SesstionInterceptor implements HandlerInterceptor {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -29,7 +34,10 @@ public class SesstionInterceptor implements HandlerInterceptor {
                     String token = cookie.getValue();
                     User user = userService.findByToken(token);
                     if (user!=null){
+                        HttpSession session = request.getSession();
                         request.getSession().setAttribute("user",user);
+                        int unreadCount = notificationService.unreadCount(user.getId());
+                        session.setAttribute("unreadCount", unreadCount);
                     }
                     break;
                 }

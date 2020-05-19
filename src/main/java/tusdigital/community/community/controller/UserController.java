@@ -96,6 +96,7 @@ public class UserController {
             user.setToken(token);
             user.setCreatetime(System.currentTimeMillis());
             user.setModifidetime(System.currentTimeMillis());
+            user.setAvatar_url("/static/pic/default.jpg");
             userService.addUser(user);
             return "redirect:/user/login";
         }

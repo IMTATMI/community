@@ -7,6 +7,15 @@
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="/static/js/community.js" type="text/javascript"></script>
+    <script src="/static/js/moment.js" type="text/javascript"></script>
+
+
+    <link rel="stylesheet" href="/static/css/editormd.min.css">
+    <link rel="stylesheet" href="/static/css/editormd.preview.min.css">
+    <script src="/static/js/editormd.min.js" type="application/javascript"></script>
+    <script src="/static/js/moment.js" type="application/javascript"></script>
+    <script src="/static/js/lib/marked.min.js"></script>
+    <script src="/static/js/lib/prettify.min.js"></script>
 
     <style>
         .head{
@@ -53,7 +62,56 @@
         .comment-sp {
             margin-top: 0;
         }
+
+        .sub-comments .comments{
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 1px solid #eee;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .sub-comments .btn{
+            margin: 10px 0;
+        }
+
+        .tou{
+            width: 45px;
+            height: 45px
+        }
+
+
+        .community-tag:hover {
+            background-color: #339dff;
+            color: #fff !important;
+            text-decoration-line: none;
+        }
+
+        .community-tag {
+            text-decoration-line: none;
+            cursor: pointer;
+            display: inline-block;
+            height: 20px;
+            line-height: 16px;
+            padding: 2px 5px;
+            background-color: #99cfff;
+            font-size: 12px;
+            color: #fff !important;
+            border-radius: 4px;
+            margin: 4px;
+        }
+
+        .question-related{
+            line-height: 25px;
+            font-size: 12px;
+            margin-left: 0;
+            list-style: none;
+            padding-left: 0;
+        }
+
     </style>
+
+
 
 </head>
 <body>
@@ -82,25 +140,34 @@
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
 
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view">
+                    <textarea style="display:none;" th:text="${question.descrpition}"></textarea>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        editormd.markdownToHTML("question-view", {});
+                    });
+                </script>
 
                 <!--内容-->
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view" style="Font-size:20px" th:text="${question.descrpition}">
-                    <!--<textarea  th:text="${question.descrpition}"></textarea>-->
-                </div>
-                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                </div>
-
-                <!--标签-->
-                <!--<hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-                <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-                    <!--<span class="question-tag" th:each="tag : ${question.tag.split(',')}">-->
-                        <!--<a th:href="@{/(page=1,tag=${tag})}"-->
-                           <!--th:text="${tag}" class="community-tag"></a>-->
-                    <!--</span>-->
+                <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view" style="Font-size:20px" th:text="${question.descrpition}">-->
+                    <!--&lt;!&ndash;<textarea  th:text="${question.descrpition}"></textarea>&ndash;&gt;-->
                 <!--</div>-->
 
+                <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+
+                <!--</div>-->
+
+                <!--标签-->
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <span class="question-tag" th:each="tag : ${question.tag.split(',')}">
+                        <a th:text="${tag}" class="community-tag"></a>
+                         <!--th:href="@{/(page=1,tag=${tag})}" -->
+                    </span>
+                </div>
+
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
             </div>
 
@@ -119,6 +186,7 @@
                                      th:src="${comment.user.avatar_url}">
                             </a>
                         </div>
+                        <!--这个id是为了让对应的二级回复找到它的一级回复-->
                         <div class="media-body" th:id="${'comment-body-'+comment.id}">
                             <h5 class="media-heading">
                                 <span th:text="${comment.user.name}"></span>
@@ -128,7 +196,7 @@
                                 <span class="glyphicon glyphicon-thumbs-up icon"></span>
                                 <!--onclick="collapseComments(this)" 开启二级评论功能-->
                                 <span th:data-id="${comment.id}"
-                                      class="comment-icon">
+                                      class="comment-icon" onclick="collapseComments(this)" >
                                     <span class="glyphicon glyphicon-comment"></span>
                                     <span th:text="${comment.commentcount}"></span>
                                 </span>
@@ -137,16 +205,16 @@
                             </div>
 
                             <!--二级评论-->
-                            <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 collapse sub-comments"-->
-                                 <!--th:id="${'comment-'+comment.id}">-->
-                                <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-                                    <!--<input type="text" class="form-control" placeholder="评论一下……"-->
-                                           <!--th:id="${'input-'+comment.id}">-->
-                                    <!--<button type="button" class="btn btn-success pull-right" onclick="comment(this)"-->
-                                            <!--th:data-id="${comment.id}">评论-->
-                                    <!--</button>-->
-                                <!--</div>-->
-                            <!--</div>-->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 collapse sub-comments"
+                                 th:id="${'comment-'+comment.id}">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="text" class="form-control" placeholder="评论一下……"
+                                           th:id="${'input-'+comment.id}">
+                                    <button type="button" class="btn btn-success pull-right" onclick="comment(this)"
+                                            th:data-id="${comment.id}">评论
+                                    </button>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -156,24 +224,29 @@
 
             <!--回复模块-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 repit"  th:if="${session.user}!=null">
-
-                <div  class="media">
-                    <div class="media-left">
-                        <a href="#">
-                           <img th:src="${session.user.avatar_url}" class="media-object img-rounded" style="width: 38px;height: 38px">
-                        </a>
+                <h4>
+                    提交回复
+                </h4>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div  class="media">
+                        <div class="media-left">
+                            <a href="#">
+                               <img th:src="${session.user.avatar_url}" class="media-object img-rounded" style="width: 38px;height: 38px">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h5 class="media-heading">
+                                <span th:text="${session.user.name}" style="height: 38px;line-height: 38px"></span>
+                            </h5>
+                        </div>
                     </div>
-                    <div class="media-body">
-                        <h5 class="media-heading">
-                            <span th:text="${session.user.name}" style="height: 38px;line-height: 38px"></span>
-                        </h5>
-                    </div>
+                    <input type="hidden" id="question_id" th:value="${question.id}">
+                    <textarea class="form-control" rows="6" style="margin: 10px 0" id="comment_content"></textarea>
+                    <button type="button" onclick="post()" class="btn btn-success" style="margin-bottom: 10px;float: right">
+                        回复
+                    </button>
                 </div>
-                <input type="hidden" id="question_id" th:value="${question.id}">
-                <textarea class="form-control" rows="6" style="margin: 10px 0" id="comment_content"></textarea>
-                <button type="button" onclick="post()" class="btn btn-success" style="margin-bottom: 10px;float: right">
-                    回复
-                </button>
             </div>
 
         </div>
@@ -198,20 +271,21 @@
                     </div>
                 </div>
                 <hr>
-                <h3>更多热点</h3>
+
             </div>
             <!--<div th:insert="~{notice :: notice}"></div>-->
             <!--<div th:insert="~{side :: side}"></div>-->
             <!--相关问题-->
-            <!--<hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-            <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-                <!--<h4>相关问题</h4>-->
-                <!--<ul class="question-related">-->
-                    <!--<li th:each="related : ${relatedQuestions}">-->
-                        <!--<a th:href="@{'/question/'+ ${related.id}}" th:text="${related.title}"></a>-->
-                    <!--</li>-->
-                <!--</ul>-->
-            <!--</div>-->
+
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>相关问题</h4>
+                <ul class="question-related">
+                    <li th:each="related : ${relatequestion}">
+                        <a th:href="@{'/question/'+ ${related.id}}" th:text="${related.title}"></a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
 

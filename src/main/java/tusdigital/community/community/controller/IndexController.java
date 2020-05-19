@@ -28,17 +28,19 @@ public class IndexController {
     QuestionService questionService;
 
     @GetMapping({"/","/index"})
-    public String index(HttpServletRequest request,
-                        @RequestParam(name = "page",defaultValue = "1") int page,
+    public String index(@RequestParam(name = "page",defaultValue = "1") int page,
                         @RequestParam(name = "size",defaultValue = "5") int size,
+                        @RequestParam(name = "search", required = false) String search,
                         Model model){
 
 
 
-        PaginationVo pagination = questionService.findAllPassQuestion(page,size);
+//        PaginationVo pagination = questionService.findAllPassQuestion(page,size);
+        PaginationVo pagination = questionService.findAllPassQuestion(search,page,size);
 
 
         model.addAttribute("pagination",pagination);
+        model.addAttribute("search", search);
 
 
         return "index";

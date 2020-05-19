@@ -16,5 +16,9 @@ public interface QuestionService {
 
     int updataQuestion(Question question);
     void incView(Integer id);
+
+    List<QuestionVo> selectRelated(QuestionVo questionvo);
+
+    PaginationVo findAllPassQuestion(String search, int page, int size);
 //    void createOrUpdate(Question question);
 }

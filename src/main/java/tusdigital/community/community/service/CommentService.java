@@ -14,5 +14,5 @@ public interface CommentService {
 
     void insert(Comment comment, User user);
 
-    List<CommentVo> listByQuestionId(Integer id);
+    List<CommentVo> listByQuestionId(Integer id,Integer type);
 }
